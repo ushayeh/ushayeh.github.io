@@ -13,86 +13,59 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>4x4 賓果遊戲</title>
+  <title>簡單賓果</title>
 
   <style>
     body {
-      font-family: Arial;
       text-align: center;
-      margin-top: 40px;
+      font-family: Arial;
     }
 
     .board {
       display: grid;
-      grid-template-columns: repeat(4, 80px);
-      gap: 10px;
+      grid-template-columns: repeat(4, 70px);
+      gap: 8px;
       justify-content: center;
       margin-top: 20px;
     }
 
     .cell {
-      width: 80px;
-      height: 80px;
-      background-color: #f0f0f0;
-      line-height: 80px;
-      font-size: 24px;
+      width: 70px;
+      height: 70px;
+      background: #ddd;
+      line-height: 70px;
+      font-size: 20px;
       cursor: pointer;
-      border-radius: 8px;
-      user-select: none;
     }
 
-    .cell.active {
-      background-color: orange;
+    .active {
+      background: orange;
       color: white;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 8px 16px;
-      font-size: 16px;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <h1>4 × 4 賓果遊戲</h1>
+  <h2>4 × 4 賓果</h2>
 
   <div class="board" id="board"></div>
 
-  <button onclick="createBoard()">重新產生</button>
-
   <script>
-    const board = document.getElementById("board");
+    let board = document.getElementById("board");
 
-    function createBoard() {
-      board.innerHTML = ""; // 清空舊的格子
+    for (let i = 0; i < 16; i++) {
+      let cell = document.createElement("div");
+      cell.className = "cell";
 
-      // 建立 1~99 的隨機不重複數字
-      let numbers = [];
-      while (numbers.length < 16) {
-        let n = Math.floor(Math.random() * 99) + 1;
-        if (!numbers.includes(n)) {
-          numbers.push(n);
-        }
-      }
+      // 1~50 的隨機數字（可重複，程式最簡單）
+      cell.innerText = Math.floor(Math.random() * 50) + 1;
 
-      // 產生 16 個格子
-      for (let i = 0; i < 16; i++) {
-        let cell = document.createElement("div");
-        cell.className = "cell";
-        cell.innerText = numbers[i];
+      cell.onclick = function () {
+        this.classList.toggle("active");
+      };
 
-        cell.onclick = function () {
-          cell.classList.toggle("active");
-        };
-
-        board.appendChild(cell);
-      }
+      board.appendChild(cell);
     }
-
-    // 頁面一打開就先產生
-    createBoard();
   </script>
 
 </body>
