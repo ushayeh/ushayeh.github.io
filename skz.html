@@ -13,7 +13,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>4x4 賓果</title>
+  <title>簡單賓果</title>
 
   <style>
     body {
@@ -44,8 +44,14 @@
     }
 
     .bingo {
-      background: red !important;
+      background: red;
       color: white;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 24px;
+      color: red;
     }
   </style>
 </head>
@@ -53,54 +59,57 @@
 
   <h2>4 × 4 賓果</h2>
 
-  <div class="board" id="board"></div>
+  <div class="board" id="board">
+    <div class="cell" onclick="clickCell(this)">1</div>
+    <div class="cell" onclick="clickCell(this)">2</div>
+    <div class="cell" onclick="clickCell(this)">3</div>
+    <div class="cell" onclick="clickCell(this)">4</div>
+
+    <div class="cell" onclick="clickCell(this)">5</div>
+    <div class="cell" onclick="clickCell(this)">6</div>
+    <div class="cell" onclick="clickCell(this)">7</div>
+    <div class="cell" onclick="clickCell(this)">8</div>
+
+    <div class="cell" onclick="clickCell(this)">9</div>
+    <div class="cell" onclick="clickCell(this)">10</div>
+    <div class="cell" onclick="clickCell(this)">11</div>
+    <div class="cell" onclick="clickCell(this)">12</div>
+
+    <div class="cell" onclick="clickCell(this)">13</div>
+    <div class="cell" onclick="clickCell(this)">14</div>
+    <div class="cell" onclick="clickCell(this)">15</div>
+    <div class="cell" onclick="clickCell(this)">16</div>
+  </div>
+
+  <div id="result"></div>
 
   <script>
-    let board = document.getElementById("board");
-    let cells = [];
+    let gameOver = false;
 
-    // 建立 16 個格子
-    for (let i = 0; i < 16; i++) {
-      let cell = document.createElement("div");
-      cell.className = "cell";
-      cell.innerText = Math.floor(Math.random() * 50) + 1;
+    function clickCell(cell) {
+      if (gameOver) return;
 
-      cell.onclick = function () {
-        cell.classList.toggle("active");
-        checkBingo();
-      };
-
-      board.appendChild(cell);
-      cells.push(cell);
+      cell.classList.add("active");
+      checkRow();
     }
 
-    function checkBingo() {
-      let lines = [
-        [0,1,2,3],
-        [4,5,6,7],
-        [8,9,10,11],
-        [12,13,14,15],
-        [0,4,8,12],
-        [1,5,9,13],
-        [2,6,10,14],
-        [3,7,11,15],
-        [0,5,10,15],
-        [3,6,9,12]
-      ];
+    function checkRow() {
+      let cells = document.getElementsByClassName("cell");
 
-      for (let line of lines) {
-        let bingo = true;
+      for (let i = 0; i < 16; i += 4) {
+        if (
+          cells[i].classList.contains("active") &&
+          cells[i+1].classList.contains("active") &&
+          cells[i+2].classList.contains("active") &&
+          cells[i+3].classList.contains("active")
+        ) {
+          cells[i].classList.add("bingo");
+          cells[i+1].classList.add("bingo");
+          cells[i+2].classList.add("bingo");
+          cells[i+3].classList.add("bingo");
 
-        for (let index of line) {
-          if (!cells[index].classList.contains("active")) {
-            bingo = false;
-          }
-        }
-
-        if (bingo) {
-          for (let index of line) {
-            cells[index].classList.add("bingo");
-          }
+          document.getElementById("result").innerText = "🎉 遊戲結束！";
+          gameOver = true;
         }
       }
     }
