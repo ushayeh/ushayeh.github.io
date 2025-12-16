@@ -14,120 +14,81 @@
 <head>
   <meta charset="UTF-8">
   <title>4x4 賓果</title>
-
   <style>
-    body {
-      text-align: center;
-      font-family: Arial;
-    }
-
+    body { text-align:center; font-family:Arial; }
     .board {
-      display: grid;
-      grid-template-columns: repeat(4, 70px);
-      gap: 8px;
-      justify-content: center;
-      margin-top: 20px;
+      display:grid;
+      grid-template-columns:repeat(4,70px);
+      gap:8px;
+      justify-content:center;
+      margin-top:20px;
     }
-
     .cell {
-      width: 70px;
-      height: 70px;
-      background: #ddd;
-      line-height: 70px;
-      font-size: 20px;
-      cursor: pointer;
+      width:70px; height:70px;
+      background:#ddd;
+      line-height:70px;
+      cursor:pointer;
     }
-
-    .active {
-      background: orange;
-      color: white;
-    }
-
-    .bingo {
-      background: red;
-      color: white;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 6px 12px;
-      font-size: 16px;
-    }
-
-    #result {
-      margin-top: 15px;
-      font-size: 22px;
-      color: red;
-    }
+    .active { background:orange; color:white; }
+    .bingo { background:red; color:white; }
   </style>
 </head>
 <body>
 
-  <h2>4 × 4 賓果</h2>
+<h2>4 × 4 賓果（含斜線）</h2>
+<button onclick="startGame()">隨機產生</button>
 
-  <button onclick="startGame()">隨機產生</button>
+<div class="board" id="board"></div>
+<p id="msg"></p>
 
-  <div class="board" id="board"></div>
+<script>
+let gameOver = false;
 
-  <div id="result"></div>
+function startGame(){
+  board.innerHTML = "";
+  msg.innerText = "";
+  gameOver = false;
 
-  <script>
-    let gameOver = false;
+  for(let i=0;i<16;i++){
+    let d = document.createElement("div");
+    d.className = "cell";
+    d.innerText = Math.floor(Math.random()*99)+1;
+    d.onclick = function(){
+      if(gameOver) return;
+      d.classList.add("active");
+      check();
+    };
+    board.appendChild(d);
+  }
+}
 
-    function startGame() {
-      let board = document.getElementById("board");
-      board.innerHTML = "";
-      document.getElementById("result").innerText = "";
-      gameOver = false;
+function check(){
+  let c = document.getElementsByClassName("cell");
 
-      for (let i = 0; i < 16; i++) {
-        let cell = document.createElement("div");
-        cell.className = "cell";
-        cell.innerText = Math.floor(Math.random() * 99) + 1;
+  // 橫、直、斜
+  let lines = [
+    [0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15], // 橫
+    [0,4,8,12],[1,5,9,13],[2,6,10,14],[3,7,11,15], // 直
+    [0,5,10,15],[3,6,9,12] // 斜
+  ];
 
-        cell.onclick = function () {
-          if (gameOver) return;
-          cell.classList.add("active");
-          checkBingo();
-        };
-
-        board.appendChild(cell);
-      }
+  for(let line of lines){
+    if(
+      c[line[0]].classList.contains("active") &&
+      c[line[1]].classList.contains("active") &&
+      c[line[2]].classList.contains("active") &&
+      c[line[3]].classList.contains("active")
+    ){
+      for(let i of line) c[i].classList.add("bingo");
+      msg.innerText = "🎉 遊戲結束";
+      gameOver = true;
+      setTimeout(startGame,1500);
     }
+  }
+}
 
-    function checkBingo() {
-      let c = document.getElementsByClassName("cell");
-
-      // 所有可能的連線（橫、直、斜）
-      let lines = [
-        [0,1,2,3], [4,5,6,7], [8,9,10,11], [12,13,14,15], // 橫
-        [0,4,8,12], [1,5,9,13], [2,6,10,14], [3,7,11,15], // 直
-        [0,5,10,15], [3,6,9,12] // 斜
-      ];
-
-      for (let line of lines) {
-        if (
-          c[line[0]].classList.contains("active") &&
-          c[line[1]].classList.contains("active") &&
-          c[line[2]].classList.contains("active") &&
-          c[line[3]].classList.contains("active")
-        ) {
-          for (let i of line) {
-            c[i].classList.add("bingo");
-          }
-
-          document.getElementById("result").innerText = "🎉 遊戲結束！";
-          gameOver = true;
-
-          // 1.5 秒後重新開始
-          setTimeout(startGame, 1500);
-        }
-      }
-    }
-
-    // 頁面一進來先產生
-    startGame();
-  </script>
+startGame();
+</script>
 
 </body>
 </html>
