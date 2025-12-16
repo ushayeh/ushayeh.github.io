@@ -13,12 +13,12 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>數字順序遊戲</title>
+  <title>簡單賓果</title>
 
   <style>
     body {
-      font-family: Arial;
       text-align: center;
+      font-family: Arial;
     }
 
     .board {
@@ -46,40 +46,26 @@
 </head>
 <body>
 
-  <h2>請由小到大點擊數字</h2>
+  <h2>4 × 4 賓果</h2>
 
   <div class="board" id="board"></div>
 
   <script>
     let board = document.getElementById("board");
-    let currentMin = 0; // 上一個點對的數字
 
-    function startGame() {
-      board.innerHTML = "";
-      currentMin = 0;
+    for (let i = 0; i < 16; i++) {
+      let cell = document.createElement("div");
+      cell.className = "cell";
 
-      for (let i = 0; i < 16; i++) {
-        let cell = document.createElement("div");
-        cell.className = "cell";
+      // 1~50 的隨機數字（可重複，程式最簡單）
+      cell.innerText = Math.floor(Math.random() * 50) + 1;
 
-        let num = Math.floor(Math.random() * 99) + 1;
-        cell.innerText = num;
+      cell.onclick = function () {
+        this.classList.toggle("active");
+      };
 
-        cell.onclick = function () {
-          if (num >= currentMin) {
-            this.classList.add("active");
-            currentMin = num;
-          } else {
-            alert("點錯了，重新開始！");
-            startGame();
-          }
-        };
-
-        board.appendChild(cell);
-      }
+      board.appendChild(cell);
     }
-
-    startGame();
   </script>
 
 </body>
