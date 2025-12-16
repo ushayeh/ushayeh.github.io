@@ -13,7 +13,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>簡單賓果</title>
+  <title>4x4 賓果</title>
 
   <style>
     body {
@@ -42,6 +42,11 @@
       background: orange;
       color: white;
     }
+
+    .bingo {
+      background: red !important;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -52,19 +57,52 @@
 
   <script>
     let board = document.getElementById("board");
+    let cells = [];
 
+    // 建立 16 個格子
     for (let i = 0; i < 16; i++) {
       let cell = document.createElement("div");
       cell.className = "cell";
-
-      // 1~50 的隨機數字（可重複，程式最簡單）
       cell.innerText = Math.floor(Math.random() * 50) + 1;
 
       cell.onclick = function () {
-        this.classList.toggle("active");
+        cell.classList.toggle("active");
+        checkBingo();
       };
 
       board.appendChild(cell);
+      cells.push(cell);
+    }
+
+    function checkBingo() {
+      let lines = [
+        [0,1,2,3],
+        [4,5,6,7],
+        [8,9,10,11],
+        [12,13,14,15],
+        [0,4,8,12],
+        [1,5,9,13],
+        [2,6,10,14],
+        [3,7,11,15],
+        [0,5,10,15],
+        [3,6,9,12]
+      ];
+
+      for (let line of lines) {
+        let bingo = true;
+
+        for (let index of line) {
+          if (!cells[index].classList.contains("active")) {
+            bingo = false;
+          }
+        }
+
+        if (bingo) {
+          for (let index of line) {
+            cells[index].classList.add("bingo");
+          }
+        }
+      }
     }
   </script>
 
