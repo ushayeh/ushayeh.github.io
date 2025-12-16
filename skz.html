@@ -13,7 +13,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>簡單賓果</title>
+  <title>4x4 賓果</title>
 
   <style>
     body {
@@ -52,7 +52,6 @@
       margin-top: 15px;
       padding: 6px 12px;
       font-size: 16px;
-      cursor: pointer;
     }
 
     #result {
@@ -89,38 +88,44 @@
         cell.onclick = function () {
           if (gameOver) return;
           cell.classList.add("active");
-          checkRow();
+          checkBingo();
         };
 
         board.appendChild(cell);
       }
     }
 
-    function checkRow() {
-      let cells = document.getElementsByClassName("cell");
+    function checkBingo() {
+      let c = document.getElementsByClassName("cell");
 
-      for (let i = 0; i < 16; i += 4) {
+      // 所有可能的連線（橫、直、斜）
+      let lines = [
+        [0,1,2,3], [4,5,6,7], [8,9,10,11], [12,13,14,15], // 橫
+        [0,4,8,12], [1,5,9,13], [2,6,10,14], [3,7,11,15], // 直
+        [0,5,10,15], [3,6,9,12] // 斜
+      ];
+
+      for (let line of lines) {
         if (
-          cells[i].classList.contains("active") &&
-          cells[i+1].classList.contains("active") &&
-          cells[i+2].classList.contains("active") &&
-          cells[i+3].classList.contains("active")
+          c[line[0]].classList.contains("active") &&
+          c[line[1]].classList.contains("active") &&
+          c[line[2]].classList.contains("active") &&
+          c[line[3]].classList.contains("active")
         ) {
-          cells[i].classList.add("bingo");
-          cells[i+1].classList.add("bingo");
-          cells[i+2].classList.add("bingo");
-          cells[i+3].classList.add("bingo");
+          for (let i of line) {
+            c[i].classList.add("bingo");
+          }
 
           document.getElementById("result").innerText = "🎉 遊戲結束！";
           gameOver = true;
 
-          // 1.5 秒後自動重新開始
+          // 1.5 秒後重新開始
           setTimeout(startGame, 1500);
         }
       }
     }
 
-    // 一進來先產生一次
+    // 頁面一進來先產生
     startGame();
   </script>
 
