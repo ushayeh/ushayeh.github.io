@@ -48,9 +48,16 @@
       color: white;
     }
 
+    button {
+      margin-top: 15px;
+      padding: 6px 12px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
     #result {
-      margin-top: 20px;
-      font-size: 24px;
+      margin-top: 15px;
+      font-size: 22px;
       color: red;
     }
   </style>
@@ -59,38 +66,34 @@
 
   <h2>4 × 4 賓果</h2>
 
-  <div class="board" id="board">
-    <div class="cell" onclick="clickCell(this)">1</div>
-    <div class="cell" onclick="clickCell(this)">2</div>
-    <div class="cell" onclick="clickCell(this)">3</div>
-    <div class="cell" onclick="clickCell(this)">4</div>
+  <button onclick="startGame()">隨機產生</button>
 
-    <div class="cell" onclick="clickCell(this)">5</div>
-    <div class="cell" onclick="clickCell(this)">6</div>
-    <div class="cell" onclick="clickCell(this)">7</div>
-    <div class="cell" onclick="clickCell(this)">8</div>
-
-    <div class="cell" onclick="clickCell(this)">9</div>
-    <div class="cell" onclick="clickCell(this)">10</div>
-    <div class="cell" onclick="clickCell(this)">11</div>
-    <div class="cell" onclick="clickCell(this)">12</div>
-
-    <div class="cell" onclick="clickCell(this)">13</div>
-    <div class="cell" onclick="clickCell(this)">14</div>
-    <div class="cell" onclick="clickCell(this)">15</div>
-    <div class="cell" onclick="clickCell(this)">16</div>
-  </div>
+  <div class="board" id="board"></div>
 
   <div id="result"></div>
 
   <script>
     let gameOver = false;
 
-    function clickCell(cell) {
-      if (gameOver) return;
+    function startGame() {
+      let board = document.getElementById("board");
+      board.innerHTML = "";
+      document.getElementById("result").innerText = "";
+      gameOver = false;
 
-      cell.classList.add("active");
-      checkRow();
+      for (let i = 0; i < 16; i++) {
+        let cell = document.createElement("div");
+        cell.className = "cell";
+        cell.innerText = Math.floor(Math.random() * 99) + 1;
+
+        cell.onclick = function () {
+          if (gameOver) return;
+          cell.classList.add("active");
+          checkRow();
+        };
+
+        board.appendChild(cell);
+      }
     }
 
     function checkRow() {
@@ -110,9 +113,15 @@
 
           document.getElementById("result").innerText = "🎉 遊戲結束！";
           gameOver = true;
+
+          // 1.5 秒後自動重新開始
+          setTimeout(startGame, 1500);
         }
       }
     }
+
+    // 一進來先產生一次
+    startGame();
   </script>
 
 </body>
